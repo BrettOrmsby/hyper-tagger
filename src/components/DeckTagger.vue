@@ -103,6 +103,13 @@ const emit = defineEmits<{
 const filteredDeck = computed(() => {
   return store.deck.filter((card) => {
     if (
+      settings.value.allowMultiselect &&
+      card.set === currentCard.value.set &&
+      card.collectorNumber === currentCard.value.collectorNumber
+    ) {
+      return true;
+    }
+    if (
       (settings.value.hideTaggedCards === "deckSpecific" ||
         settings.value.hideTaggedCards === "any") &&
       card.deckSpecificTags.length
