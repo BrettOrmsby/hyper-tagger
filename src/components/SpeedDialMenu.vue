@@ -36,11 +36,15 @@ import SpeedDial from "primevue/speeddial";
 import PenIcon from "./icons/PenIcon.vue";
 import SettingsIcon from "./icons/SettingsIcon.vue";
 import TagsIcon from "./icons/TagsIcon.vue";
-import DownloadIcon from "./icons/DownloadIcon.vue";
+import CopyClipboard from "./icons/CopyClipboard.vue";
 import PlusIcon from "./icons/PlusIcon.vue";
 import MenuIcon from "./icons/MenuIcon.vue";
+import store from "@/lib/store";
+import { useToast } from "primevue/usetoast";
 
-type Page = "Export" | "Tagger" | "Settings" | "Enter Deck";
+const toast = useToast();
+
+type Page = "Tagger" | "Settings" | "Enter Deck";
 defineProps<{ modelValue: Page }>();
 const emit = defineEmits<{
   "update:modelValue": [value: Page];
@@ -55,10 +59,26 @@ const items: MenuItem[] = [
     }
   },
   {
-    label: "Export",
-    vueIcon: DownloadIcon,
-    command: () => {
-      emit("update:modelValue", "Export");
+    label: "Copy",
+    vueIcon: CopyClipboard,
+    command: async () => {
+      const deck = store.deck
+        .map(
+          (card) =>
+            `${card.amount} ${card.name} (${card.set}) ${card.collectorNumber}${
+              card.isFoil ? " *F*" : ""
+            }${[
+              ...card.globalTags.map((tag) => " #!" + tag),
+              ...card.deckSpecificTags.map((tag) => " #" + tag)
+            ].join("")}`
+        )
+        .join("\n");
+      try {
+        await navigator.clipboard.writeText(deck);
+        toast.add({ severity: "success", summary: "Deck Copied", life: 3000 });
+      } catch (err) {
+        toast.add({ severity: "error", summary: "Failed To Copy Deck", life: 3000 });
+      }
     }
   },
   {

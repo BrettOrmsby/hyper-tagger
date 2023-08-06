@@ -1,21 +1,41 @@
 <template>
-  <SpeedDialMenu v-model="currentTab" />
-  <main>
-    <ConfirmDialogTemplate />
-    <h1>Hyper Tagger</h1>
-    <div v-show="currentTab === 'Enter Deck'">
-      <EnterDeck @complete="() => (currentTab = 'Settings')" />
-    </div>
-    <div v-show="currentTab === 'Settings'">
-      <TaggerSettings @complete="() => (currentTab = 'Tagger')" />
-    </div>
-    <div v-show="currentTab === 'Tagger'">
-      <DeckTagger @complete="() => (currentTab = 'Export')" />
-    </div>
-    <div v-show="currentTab === 'Export'">
-      <ExportDeck />
-    </div>
-  </main>
+  <div>
+    <Toast>
+      <template #message="slotProps">
+        <div
+          style="display: flex; align-items: center; justify-content: space-between; width: 100%"
+        >
+          <CheckIcon
+            v-if="slotProps.message.severity === 'success'"
+            class="p-icon p-toast-message-icon"
+          />
+          <WarnIcon
+            v-else-if="slotProps.message.severity === 'warn'"
+            class="p-icon p-toast-message-icon"
+          />
+          <XCircleIcon
+            v-else-if="slotProps.message.severity === 'error'"
+            class="p-icon p-toast-message-icon"
+          />
+          <p class="p-toast-message-text">{{ slotProps.message.summary }}</p>
+        </div>
+      </template>
+    </Toast>
+    <SpeedDialMenu v-model="currentTab" />
+    <main>
+      <ConfirmDialogTemplate />
+      <h1>Hyper Tagger</h1>
+      <div v-show="currentTab === 'Enter Deck'">
+        <EnterDeck @complete="() => (currentTab = 'Settings')" />
+      </div>
+      <div v-show="currentTab === 'Settings'">
+        <TaggerSettings @complete="() => (currentTab = 'Tagger')" />
+      </div>
+      <div v-show="currentTab === 'Tagger'">
+        <DeckTagger />
+      </div>
+    </main>
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -23,13 +43,16 @@ import EnterDeck from "./components/EnterDeck.vue";
 import TaggerSettings from "./components/TaggerSettings.vue";
 import DeckTagger from "./components/DeckTagger.vue";
 import ConfirmDialogTemplate from "./components/ConfirmDialogTemplate.vue";
-import ExportDeck from "./components/ExportDeck.vue";
+import SpeedDialMenu from "./components/SpeedDialMenu.vue";
+import WarnIcon from "./components/icons/WarnIcon.vue";
+import CheckIcon from "./components/icons/CheckIcon.vue";
+import XCircleIcon from "./components/icons/XCircleIcon.vue";
+import Toast from "primevue/toast";
 import { useConfirm } from "primevue/useconfirm";
 import { ref, watch } from "vue";
 import store from "./lib/store";
-import SpeedDialMenu from "./components/SpeedDialMenu.vue";
 
-type Page = "Export" | "Tagger" | "Settings" | "Enter Deck";
+type Page = "Tagger" | "Settings" | "Enter Deck";
 const confirm = useConfirm();
 const currentTab = ref<Page>("Enter Deck");
 
