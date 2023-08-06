@@ -33,7 +33,7 @@
           <div class="tag-container">
             <button
               class="tag-button"
-              v-for="tag of deckTags.global"
+              v-for="tag of store.globalTags"
               :key="tag"
               @click="toggle('global', tag)"
             >
@@ -46,7 +46,7 @@
           <div class="tag-container">
             <button
               class="tag-button"
-              v-for="tag of deckTags.deckSpecific"
+              v-for="tag of store.deckSpecificTags"
               :key="tag"
               @click="toggle('deckSpecific', tag)"
             >
@@ -96,19 +96,13 @@ const emit = defineEmits<{
 
 // TODO: show alert thing when all cards are tagged/ maybe confirmation to reload the tagger with untagged settings stuff
 // TODO: sort the deck into instants, creatures and such before
+// TODO: when increase the card index but get to the end of the deck there is an error, need to decrease the card index to the max of the filtered deck length
 
 /*
  * Filter cards out of the deck based on the settings
  */
 const filteredDeck = computed(() => {
   return store.deck.filter((card) => {
-    if (
-      settings.value.allowMultiselect &&
-      card.set === currentCard.value.set &&
-      card.collectorNumber === currentCard.value.collectorNumber
-    ) {
-      return true;
-    }
     if (
       (settings.value.hideTaggedCards === "deckSpecific" ||
         settings.value.hideTaggedCards === "any") &&
@@ -145,20 +139,6 @@ const scryfallCard = computed(() => {
     (card) =>
       card.set === deckCard.set.toLowerCase() && card.collector_number === deckCard.collectorNumber
   ) as ScryfallCard;
-});
-
-/*
- * Get all the tags from the deck
- */
-const deckTags = computed(() => {
-  // TODO: allow the custom added tags that will be stored in the store
-  const global = new Set<string>();
-  const deckSpecific = new Set<string>();
-  store.deck.forEach((deckCard) => {
-    deckCard.globalTags.forEach((tag) => global.add(tag));
-    deckCard.deckSpecificTags.forEach((tag) => deckSpecific.add(tag));
-  });
-  return { global: [...global].sort(), deckSpecific: [...deckSpecific].sort() };
 });
 
 /*

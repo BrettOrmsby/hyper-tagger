@@ -55,7 +55,7 @@ const items: MenuItem[] = [
     label: "Add Tag",
     vueIcon: PlusIcon,
     command: () => {
-      // TODO: add global/deckSpecific tags
+      store.isAddTagOpen = true;
     }
   },
   {

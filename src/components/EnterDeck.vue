@@ -93,6 +93,14 @@ const loadDeck = async () => {
     store.scryfallCards = cards;
     store.isDeckEdited = false;
     store.cardIndex = 0;
+    const globalTags = new Set<string>();
+    const deckSpecificTags = new Set<string>();
+    deckCards.forEach((deckCard) => {
+      deckCard.globalTags.forEach((tag) => globalTags.add(tag));
+      deckCard.deckSpecificTags.forEach((tag) => deckSpecificTags.add(tag));
+    });
+    store.globalTags = [...globalTags];
+    store.deckSpecificTags = [...deckSpecificTags];
     emit("complete");
   }
 };

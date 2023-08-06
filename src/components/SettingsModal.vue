@@ -4,6 +4,7 @@
     header="Settings"
     :modal="true"
     :dismissableMask="true"
+    style="margin: 0 1rem; max-width: 450px; width: 100%"
   >
     <form @submit.prevent="">
       <p>Cards:</p>

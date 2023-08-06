@@ -22,6 +22,7 @@
       </template>
     </Toast>
     <SettingsModal />
+    <AddTagModal />
     <SpeedDialMenu v-model="currentTab" />
     <main>
       <ConfirmDialogTemplate />
@@ -42,6 +43,7 @@ import SettingsModal from "./components/SettingsModal.vue";
 import DeckTagger from "./components/DeckTagger.vue";
 import ConfirmDialogTemplate from "./components/ConfirmDialogTemplate.vue";
 import SpeedDialMenu from "./components/SpeedDialMenu.vue";
+import AddTagModal from "./components/AddTagModal.vue";
 import WarnIcon from "./components/icons/WarnIcon.vue";
 import CheckIcon from "./components/icons/CheckIcon.vue";
 import XCircleIcon from "./components/icons/XCircleIcon.vue";
