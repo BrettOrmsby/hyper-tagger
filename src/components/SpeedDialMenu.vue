@@ -44,7 +44,7 @@ import { useToast } from "primevue/usetoast";
 
 const toast = useToast();
 
-type Page = "Tagger" | "Settings" | "Enter Deck";
+type Page = "Tagger" | "Enter Deck";
 defineProps<{ modelValue: Page }>();
 const emit = defineEmits<{
   "update:modelValue": [value: Page];
@@ -56,6 +56,13 @@ const items: MenuItem[] = [
     vueIcon: PlusIcon,
     command: () => {
       // TODO: add global/deckSpecific tags
+    }
+  },
+  {
+    label: "Settings",
+    vueIcon: SettingsIcon,
+    command: () => {
+      store.isSettingsOpened = true;
     }
   },
   {
@@ -86,13 +93,6 @@ const items: MenuItem[] = [
     vueIcon: TagsIcon,
     command: () => {
       emit("update:modelValue", "Tagger");
-    }
-  },
-  {
-    label: "Settings",
-    vueIcon: SettingsIcon,
-    command: () => {
-      emit("update:modelValue", "Settings");
     }
   },
   {

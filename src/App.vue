@@ -21,15 +21,13 @@
         </div>
       </template>
     </Toast>
+    <SettingsModal />
     <SpeedDialMenu v-model="currentTab" />
     <main>
       <ConfirmDialogTemplate />
       <h1>Hyper Tagger</h1>
       <div v-show="currentTab === 'Enter Deck'">
-        <EnterDeck @complete="() => (currentTab = 'Settings')" />
-      </div>
-      <div v-show="currentTab === 'Settings'">
-        <TaggerSettings @complete="() => (currentTab = 'Tagger')" />
+        <EnterDeck @complete="() => (currentTab = 'Tagger')" />
       </div>
       <div v-show="currentTab === 'Tagger'">
         <DeckTagger />
@@ -40,7 +38,7 @@
 
 <script lang="ts" setup>
 import EnterDeck from "./components/EnterDeck.vue";
-import TaggerSettings from "./components/TaggerSettings.vue";
+import SettingsModal from "./components/SettingsModal.vue";
 import DeckTagger from "./components/DeckTagger.vue";
 import ConfirmDialogTemplate from "./components/ConfirmDialogTemplate.vue";
 import SpeedDialMenu from "./components/SpeedDialMenu.vue";
@@ -52,7 +50,7 @@ import { useConfirm } from "primevue/useconfirm";
 import { ref, watch } from "vue";
 import store from "./lib/store";
 
-type Page = "Tagger" | "Settings" | "Enter Deck";
+type Page = "Tagger" | "Enter Deck";
 const confirm = useConfirm();
 const currentTab = ref<Page>("Enter Deck");
 

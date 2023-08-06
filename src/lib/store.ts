@@ -8,13 +8,17 @@ type Store = {
   isDeckEdited: boolean;
   cardIndex: number;
   isTagsEdited: boolean;
+  isSettingsOpened: boolean;
+  isAddTagOpen: boolean;
 };
 const store = reactive<Store>({
   deck: [],
   scryfallCards: [],
   isDeckEdited: false,
   cardIndex: 0,
-  isTagsEdited: false
+  isTagsEdited: false,
+  isSettingsOpened: false,
+  isAddTagOpen: false
 });
 
 type Settings = {
