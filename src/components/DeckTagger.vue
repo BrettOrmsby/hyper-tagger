@@ -19,14 +19,14 @@
         aria-label="Previous"
         class="gallery-button"
         @click="previous()"
-        :disabled="store.cardIndex === 0"
+        :disabled="safeCardIndex === 0"
       >
         <template #icon="data">
           <PreviousIcon :class="data.class" />
         </template>
       </Button>
       <div class="flex-center">
-        <p class="card-number">{{ store.cardIndex + 1 }} / {{ filteredDeck.length }}</p>
+        <p class="card-number">{{ safeCardIndex + 1 }} / {{ filteredDeck.length }}</p>
         <CardImage :card="scryfallCard" />
         <template v-if="settings.hideTags !== 'global'">
           <h2 v-if="settings.hideTags !== 'deckSpecific'">Global</h2>
@@ -67,7 +67,7 @@
         aria-label="Next"
         class="gallery-button"
         @click="next()"
-        :disabled="store.cardIndex === filteredDeck.length - 1"
+        :disabled="safeCardIndex === filteredDeck.length - 1"
       >
         <template #icon="data">
           <NextIcon :class="data.class" />
@@ -88,7 +88,7 @@ import WarnIcon from "./icons/WarnIcon.vue";
 import PreviousIcon from "./icons/PreviousIcon.vue";
 import NextIcon from "./icons/NextIcon.vue";
 import store, { settings } from "@/lib/store";
-import { computed } from "vue";
+import { computed, watch } from "vue";
 import type { DeckCard, ScryfallCard } from "@/lib/types";
 const emit = defineEmits<{
   complete: [];
@@ -96,7 +96,6 @@ const emit = defineEmits<{
 
 // TODO: show alert thing when all cards are tagged/ maybe confirmation to reload the tagger with untagged settings stuff
 // TODO: sort the deck into instants, creatures and such before
-// TODO: when increase the card index but get to the end of the deck there is an error, need to decrease the card index to the max of the filtered deck length
 
 /*
  * Filter cards out of the deck based on the settings
@@ -120,12 +119,27 @@ const filteredDeck = computed(() => {
   });
 });
 
+// Ensure the card index is never over the filtered card index. (For example, when moving to the end of the deck and tagging that card to remove it from the filtered list)
+const safeCardIndex = computed({
+  get: () => {
+    if (store.cardIndex > filteredDeck.value.length - 1) {
+      return filteredDeck.value.length - 1;
+    } else if (store.cardIndex < 0) {
+      return 0;
+    }
+    return store.cardIndex;
+  },
+  set: (value) => {
+    store.cardIndex = value;
+  }
+});
+
 /*
  * Get the card in the deck based on what is shown
  */
 const currentCard = computed(() => {
   return store.deck.find((card) => {
-    const filteredCard = filteredDeck.value[store.cardIndex];
+    const filteredCard = filteredDeck.value[safeCardIndex.value];
     return card.set === filteredCard.set && card.collectorNumber === filteredCard.collectorNumber;
   }) as DeckCard;
 });
@@ -134,7 +148,7 @@ const currentCard = computed(() => {
  * Get the scryfall card from what is shown
  */
 const scryfallCard = computed(() => {
-  const deckCard = filteredDeck.value[store.cardIndex];
+  const deckCard = filteredDeck.value[safeCardIndex.value];
   return store.scryfallCards.find(
     (card) =>
       card.set === deckCard.set.toLowerCase() && card.collector_number === deckCard.collectorNumber
@@ -155,8 +169,8 @@ const toggle = (tagType: "global" | "deckSpecific", tag: string) => {
   store.isTagsEdited = true;
 };
 
-const next = () => (store.cardIndex += 1);
-const previous = () => (store.cardIndex -= 1);
+const next = () => (safeCardIndex.value += 1);
+const previous = () => (safeCardIndex.value -= 1);
 </script>
 
 <style scoped>
