@@ -66,7 +66,7 @@ const items: MenuItem[] = [
     }
   },
   {
-    label: "Copy",
+    label: "Copy Deck",
     vueIcon: CopyClipboard,
     command: async () => {
       const deck = store.deck

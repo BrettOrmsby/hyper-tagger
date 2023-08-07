@@ -28,12 +28,11 @@ const store = reactive<Store>({
 type Settings = {
   hideTags: "none" | "deckSpecific" | "global";
   hideTaggedCards: "none" | "deckSpecific" | "global" | "any";
-  allowMultiselect: boolean;
 };
 
 const settings = useStorage(
   "settings",
-  { hideTags: "none", hideTaggedCards: "any", allowMultiselect: false } as Settings,
+  { hideTags: "none", hideTaggedCards: "any" } as Settings,
   localStorage,
   { mergeDefaults: true }
 );

@@ -38,11 +38,6 @@
         />
         <label :for="'hideTags-' + hideTagsOption.value">{{ hideTagsOption.title }}</label>
       </div>
-
-      <div class="switch-container">
-        <label for="multiselect">Multiselect Tags: </label>
-        <InputSwitch inputId="multiselect" v-model="settings.allowMultiselect" />
-      </div>
     </form>
   </Dialog>
 </template>
@@ -50,7 +45,6 @@
 <script lang="ts" setup>
 import Dialog from "primevue/dialog";
 import RadioButton from "primevue/radiobutton";
-import InputSwitch from "primevue/inputswitch";
 import store, { settings } from "@/lib/store";
 
 const hideTagsOptions = [
@@ -80,15 +74,5 @@ label {
 }
 .radio-container:last-child {
   margin-bottom: var(--content-padding);
-}
-.switch-container {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  margin-bottom: var(--content-padding);
-}
-.switch-container label {
-  margin-left: 0;
-  margin-right: var(--inline-spacing);
 }
 </style>
