@@ -151,6 +151,30 @@ const loadScryfallData = async (
       error = e;
     }
   }
+
+  try {
+    // Fetch all english versions of the non-english cards
+    const englishCards = await Promise.all(
+      cards.map(async (card) => {
+        if (card.lang === "en") {
+          return card;
+        }
+        const response = await fetch(
+          `https://api.scryfall.com/cards/${card.set}/${card.collector_number}/en`
+        );
+
+        if (!response.ok) {
+          throw new Error(response.statusText);
+        }
+        const data = await response.json();
+        return data as ScryfallCard;
+      })
+    );
+    cards = englishCards;
+  } catch (e: any) {
+    error = e;
+  }
+
   return { cards, notFound, error };
 };
 
