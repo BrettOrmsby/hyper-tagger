@@ -18,7 +18,7 @@
 
 <script lang="ts" setup>
 import Dialog from "primevue/dialog";
-import Chips from "primevue/Chips";
+import Chips from "primevue/chips";
 import store from "@/lib/store";
 </script>
 
