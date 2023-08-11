@@ -47,8 +47,8 @@ const isLoading = ref(false);
 const errorMessages = ref<string[]>([]);
 
 /*
-* Present a warning if the tags of the deck were edited before entering a new deck
-*/
+ * Present a warning if the tags of the deck were edited before entering a new deck
+ */
 const checkConfirmLoadDeck = async () => {
   if (store.isTagsEdited) {
     confirm.require({
@@ -239,7 +239,7 @@ const deckToJson = (deck: string): { cards: DeckCard[]; errors: number[] } => {
       name: matches[2].trim(),
       set: matches[3].trim(),
       collectorNumber: matches[4].trim(),
-      isFoil: matches[5] === null ? false : true,
+      isFoil: matches[5] === undefined ? false : true,
       globalTags: globalTags,
       deckSpecificTags: deckSpecificTags
     });

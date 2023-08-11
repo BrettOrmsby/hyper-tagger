@@ -74,8 +74,6 @@
         </template>
       </Button>
     </div>
-
-    <Button label="Export Deck" @click="emit('complete')" />
   </div>
 </template>
 
@@ -90,9 +88,6 @@ import NextIcon from "./icons/NextIcon.vue";
 import store, { settings } from "@/lib/store";
 import { computed } from "vue";
 import type { DeckCard, ScryfallCard } from "@/lib/types";
-const emit = defineEmits<{
-  complete: [];
-}>();
 // TODO: sort the deck into instants, creatures and such before
 
 /*
