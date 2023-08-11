@@ -8,7 +8,7 @@ export default defineConfig({
   plugins: [
     vue(),
   ],
-  base: "https://normal-tangerine8609.github.io/hyper-tagger/",
+  base: "/hyper-tagger/",
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
