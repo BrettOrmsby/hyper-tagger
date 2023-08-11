@@ -88,7 +88,7 @@ import WarnIcon from "./icons/WarnIcon.vue";
 import PreviousIcon from "./icons/PreviousIcon.vue";
 import NextIcon from "./icons/NextIcon.vue";
 import store, { settings } from "@/lib/store";
-import { computed, watch } from "vue";
+import { computed } from "vue";
 import type { DeckCard, ScryfallCard } from "@/lib/types";
 const emit = defineEmits<{
   complete: [];
