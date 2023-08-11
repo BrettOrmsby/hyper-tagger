@@ -93,8 +93,6 @@ import type { DeckCard, ScryfallCard } from "@/lib/types";
 const emit = defineEmits<{
   complete: [];
 }>();
-
-// TODO: show alert thing when all cards are tagged/ maybe confirmation to reload the tagger with untagged settings stuff
 // TODO: sort the deck into instants, creatures and such before
 
 /*

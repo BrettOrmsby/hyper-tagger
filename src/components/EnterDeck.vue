@@ -13,7 +13,7 @@
       {{ errorMessage }}
     </p>
   </div>
-  <Button label="Load Deck" icon-pos="left" :loading="isLoading" @click="loadDeck">
+  <Button label="Load Deck" icon-pos="left" :loading="isLoading" @click="checkConfirmLoadDeck">
     <template #icon="slotProps">
       <PenIcon v-if="store.isDeckEdited" :class="slotProps.class" />
       <CheckIcon v-else :class="slotProps.class" />
@@ -25,7 +25,6 @@
 </template>
 
 <script lang="ts" setup>
-// TODO: show warnings when editing deck textarea with changes made to the tags
 import Textarea from "primevue/textarea";
 import Button from "primevue/button";
 import CheckIcon from "@/components/icons/CheckIcon.vue";
@@ -33,17 +32,41 @@ import PenIcon from "@/components/icons/PenIcon.vue";
 import LoadIcon from "@/components/icons/LoadIcon.vue";
 import type { DeckCard, ScryfallCard } from "@/lib/types";
 import { convertStreamToString } from "@/lib/utils";
-import { ref } from "vue";
 import store from "@/lib/store";
+import { ref } from "vue";
+import { useConfirm } from "primevue/useconfirm";
 
 const emit = defineEmits<{
   complete: [];
 }>();
 type ScryfallIdentifier = { set: string; collector_number: string };
 
+const confirm = useConfirm();
 const deck = ref("1 Live Fast (KLD) 87 *F* #!Global #Deck-Specific");
 const isLoading = ref(false);
 const errorMessages = ref<string[]>([]);
+
+/*
+* Present a warning if the tags of the deck were edited before entering a new deck
+*/
+const checkConfirmLoadDeck = async () => {
+  if (store.isTagsEdited) {
+    confirm.require({
+      group: "template",
+      message: "This action will overwrite the current edited deck. Do you want to continue?",
+      header: "Warning",
+      icon: '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-alert-triangle"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>',
+      accept: async () => {
+        await loadDeck();
+      },
+      reject: () => {
+        store.isDeckEdited = false;
+      }
+    });
+  } else {
+    await loadDeck();
+  }
+};
 
 /*
  * Load the deck into the tagger
