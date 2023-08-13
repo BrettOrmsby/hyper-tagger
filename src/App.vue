@@ -1,36 +1,28 @@
 <template>
   <div>
-    <Toast>
-      <template #message="slotProps">
-        <div
-          style="display: flex; align-items: center; justify-content: space-between; width: 100%"
-        >
-          <CheckIcon
-            v-if="slotProps.message.severity === 'success'"
-            class="p-icon p-toast-message-icon"
-          />
-          <WarnIcon
-            v-else-if="slotProps.message.severity === 'warn'"
-            class="p-icon p-toast-message-icon"
-          />
-          <XCircleIcon
-            v-else-if="slotProps.message.severity === 'error'"
-            class="p-icon p-toast-message-icon"
-          />
-          <p class="p-toast-message-text">{{ slotProps.message.summary }}</p>
-        </div>
-      </template>
-    </Toast>
+    <ToastWrapper />
     <SettingsModal />
     <AddTagModal />
     <SpeedDialMenu v-model="currentTab" />
     <main>
       <ConfirmDialogTemplate />
-      <h1>Hyper Tagger</h1>
       <div v-show="currentTab === 'Enter Deck'">
+        <h1 class="with-greeting">
+          <img :src="imageUrl" class="logo" />
+          Hyper Tagger
+        </h1>
+        <p class="greeting">
+          Need to tag your <a href="https://www.moxfield.com/" target="_blank">Moxfield</a> deck?
+          Want to save time? Don't have a computer with you? Try this!
+        </p>
         <EnterDeck @complete="() => (currentTab = 'Tagger')" />
+        <HelpSection />
       </div>
       <div v-show="currentTab === 'Tagger'">
+        <h1>
+          <img :src="imageUrl" class="logo" />
+          Hyper Tagger
+        </h1>
         <DeckTagger />
       </div>
     </main>
@@ -39,15 +31,14 @@
 
 <script lang="ts" setup>
 import EnterDeck from "./components/EnterDeck.vue";
+import HelpSection from "./components/HelpSection.vue";
 import SettingsModal from "./components/SettingsModal.vue";
 import DeckTagger from "./components/DeckTagger.vue";
 import ConfirmDialogTemplate from "./components/ConfirmDialogTemplate.vue";
+import ToastWrapper from "./components/ToastWrapper.vue";
 import SpeedDialMenu from "./components/SpeedDialMenu.vue";
 import AddTagModal from "./components/AddTagModal.vue";
-import WarnIcon from "./components/icons/WarnIcon.vue";
-import CheckIcon from "./components/icons/CheckIcon.vue";
-import XCircleIcon from "./components/icons/XCircleIcon.vue";
-import Toast from "primevue/toast";
+import imageUrl from "@/assets/logo.svg";
 import { useConfirm } from "primevue/useconfirm";
 import { ref, watch } from "vue";
 import store from "./lib/store";
@@ -56,7 +47,7 @@ type Page = "Tagger" | "Enter Deck";
 const confirm = useConfirm();
 const currentTab = ref<Page>("Enter Deck");
 
-watch(currentTab, (newValue, oldValue) => {
+watch(currentTab, (_newValue, oldValue) => {
   if (oldValue === "Enter Deck" && store.isDeckEdited) {
     confirm.require({
       group: "template",
@@ -74,7 +65,19 @@ watch(currentTab, (newValue, oldValue) => {
 </script>
 
 <style scoped>
+.logo {
+  height: 1em;
+  width: 1em;
+  vertical-align: middle;
+}
 .step {
   margin-bottom: var(--content-padding);
+}
+.with-greeting {
+  margin-bottom: var(--inline-spacing);
+}
+.greeting {
+  margin-top: 0;
+  color: var(--text-color-secondary);
 }
 </style>
