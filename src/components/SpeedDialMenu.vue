@@ -107,7 +107,7 @@ const items: MenuItem[] = [
 
 <style scoped>
 :deep(.p-speeddial-button) {
-  border: 1px solid var(--surface-0);
+  border: 1px solid var(--surface-0) !important;
 }
 :deep(.p-button) {
   pointer-events: all;
