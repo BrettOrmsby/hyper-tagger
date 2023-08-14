@@ -261,7 +261,7 @@ const sortDeck = (deck: DeckCard[], scryfallCards: ScryfallCard[]): DeckCard[] =
     "Battle",
     "Land"
   ];
-  
+
   const getMainType = (card: ScryfallCard): string => {
     const typeLine = card.type_line.split("—")[0];
     for (const type of mainTypes) {
