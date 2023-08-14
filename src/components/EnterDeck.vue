@@ -112,7 +112,7 @@ const loadDeck = async () => {
   isLoading.value = false;
 
   if (notFound.length === 0) {
-    store.deck = deckCards;
+    store.deck = sortDeck(deckCards, cards);
     store.scryfallCards = cards;
     store.isDeckEdited = false;
     store.cardIndex = 0;
@@ -245,6 +245,43 @@ const deckToJson = (deck: string): { cards: DeckCard[]; errors: number[] } => {
     });
   }
   return { cards, errors };
+};
+
+/*
+ * Sort the deck by card type
+ */
+const sortDeck = (deck: DeckCard[], scryfallCards: ScryfallCard[]): DeckCard[] => {
+  const mainTypes = [
+    "Planeswalker",
+    "Creature",
+    "Sorcery",
+    "Instant",
+    "Artifact",
+    "Enchantment",
+    "Battle",
+    "Land"
+  ];
+  
+  const getMainType = (card: ScryfallCard): string => {
+    const typeLine = card.type_line.split("—")[0];
+    for (const type of mainTypes) {
+      if (typeLine.includes(type)) {
+        return type;
+      }
+    }
+    return typeLine.split(" ")[0];
+  };
+
+  return deck.sort((a, b) => {
+    const scryfallA = scryfallCards.find(
+      (card) => card.collector_number === a.collectorNumber && card.set === a.set.toLowerCase()
+    )!;
+    const scryfallB = scryfallCards.find(
+      (card) => card.collector_number === b.collectorNumber && card.set === b.set.toLowerCase()
+    )!;
+
+    return getMainType(scryfallA) > getMainType(scryfallB) ? 1 : -1;
+  });
 };
 </script>
 

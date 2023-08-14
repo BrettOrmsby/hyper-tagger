@@ -88,7 +88,6 @@ import NextIcon from "./icons/NextIcon.vue";
 import store, { settings } from "@/lib/store";
 import { computed } from "vue";
 import type { DeckCard, ScryfallCard } from "@/lib/types";
-// TODO: sort the deck into instants, creatures and such before
 
 /*
  * Filter cards out of the deck based on the settings
