@@ -19,7 +19,7 @@
         <HelpSection />
       </div>
       <div v-show="currentTab === 'Tagger'">
-        <h1>
+        <h1 style="text-align: center;">
           <img :src="imageUrl" class="logo" />
           Hyper Tagger
         </h1>
