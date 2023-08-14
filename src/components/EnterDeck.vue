@@ -220,7 +220,7 @@ const deckToJson = (deck: string): { cards: DeckCard[]; errors: number[] } => {
     // Try to match the card
     const matches = line
       .trim()
-      .match(/^(\d+) (.+?) \(([A-Z0-9]+)\) (\d+p?)( \*F\*)?( (#!?.+? ?)*)?$/);
+      .match(/^(\d+) (.+?) \(([A-Za-z0-9]+)\) ([A-Za-z0-9]+)( \*F\*)?( (#!?.+? ?)*)?$/);
     if (matches === null) {
       errors.push(i);
       continue;
