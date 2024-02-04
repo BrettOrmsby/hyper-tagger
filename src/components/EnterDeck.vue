@@ -25,6 +25,8 @@
 </template>
 
 <script lang="ts" setup>
+// TODO: it does not work when hiding global tags but tagging with deck specific tags that are the same name as the hidden global tag (ie #!interaction will not work to apply the new tag #interaction)
+// TODO: Star of Extinction (MB1) 1068 does not work
 import Textarea from "primevue/textarea";
 import Button from "primevue/button";
 import CheckIcon from "@/components/icons/CheckIcon.vue";
@@ -220,7 +222,7 @@ const deckToJson = (deck: string): { cards: DeckCard[]; errors: number[] } => {
     // Try to match the card
     const matches = line
       .trim()
-      .match(/^(\d+) (.+?) \(([A-Za-z0-9]+)\) ([A-Za-z0-9]+)( \*F\*)?( (#!?.+? ?)*)?$/);
+      .match(/^(\d+) (.+?) \(([A-Za-z0-9]+)\) ([-A-Za-z0-9]+)( \*F\*)?( (#!?.+? ?)*)?$/);
     if (matches === null) {
       errors.push(i);
       continue;
