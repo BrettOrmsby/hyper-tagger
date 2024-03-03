@@ -74,6 +74,8 @@ const items: MenuItem[] = [
           (card) =>
             `${card.amount} ${card.name} (${card.set}) ${card.collectorNumber}${
               card.isFoil ? " *F*" : ""
+            }${
+              card.isEtched ? " *E*" : ""
             }${[
               ...card.globalTags.map((tag) => " #!" + tag),
               ...card.deckSpecificTags.map((tag) => " #" + tag)

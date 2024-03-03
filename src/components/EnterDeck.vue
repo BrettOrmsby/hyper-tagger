@@ -222,7 +222,7 @@ const deckToJson = (deck: string): { cards: DeckCard[]; errors: number[] } => {
     // Try to match the card
     const matches = line
       .trim()
-      .match(/^(\d+) (.+?) \(([A-Za-z0-9]+)\) ([-A-Za-z0-9]+)( \*F\*)?( (#!?.+? ?)*)?$/);
+      .match(/^(\d+) (.+?) \(([A-Za-z0-9]+)\) ([-A-Za-z0-9]+)( \*[FE]\*)?( (#!?.+? ?)*)?$/);
     if (matches === null) {
       errors.push(i);
       continue;
@@ -241,7 +241,8 @@ const deckToJson = (deck: string): { cards: DeckCard[]; errors: number[] } => {
       name: matches[2].trim(),
       set: matches[3].trim(),
       collectorNumber: matches[4].trim(),
-      isFoil: matches[5] === undefined ? false : true,
+      isFoil: matches[5]?.trim() ===  "*F*",
+      isEtched: matches[5]?.trim() ===  "*E*",
       globalTags: globalTags,
       deckSpecificTags: deckSpecificTags
     });

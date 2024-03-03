@@ -4,6 +4,7 @@ export type DeckCard = {
   set: string;
   collectorNumber: string;
   isFoil: boolean;
+  isEtched: boolean;
   globalTags: string[];
   deckSpecificTags: string[];
 };
