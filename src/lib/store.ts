@@ -5,7 +5,6 @@ import type { DeckCard, ScryfallCard } from "./types";
 type Store = {
   deck: DeckCard[];
   scryfallCards: ScryfallCard[];
-  isDeckEdited: boolean;
   cardIndex: number;
   isTagsEdited: boolean;
   isSettingsOpened: boolean;
@@ -16,7 +15,6 @@ type Store = {
 const store = reactive<Store>({
   deck: [],
   scryfallCards: [],
-  isDeckEdited: false,
   globalTags: [],
   deckSpecificTags: [],
   cardIndex: 0,

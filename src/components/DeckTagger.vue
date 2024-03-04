@@ -1,5 +1,32 @@
 <template>
   <div class="flex-center">
+    <Toolbar>
+      <template #start>
+        <Button
+          v-tooltip.top="{ value: 'Settings', showDelay: 1000 }"
+          @click="() => (store.isSettingsOpened = true)"
+          severity="secondary"
+        >
+          <template #icon>
+            <SettingsIcon class="p-icon" />
+          </template>
+        </Button>
+      </template>
+      <template #center>
+        <p class="card-number">{{ safeCardIndex + 1 }} / {{ filteredDeck.length }}</p>
+      </template>
+      <template #end>
+        <Button
+          v-tooltip.top="{ value: 'Add Tag', showDelay: 1000 }"
+          @click="() => (store.isAddTagOpen = true)"
+          severity="secondary"
+        >
+          <template #icon>
+            <TagsIcon class="p-icon" />
+          </template>
+        </Button>
+      </template>
+    </Toolbar>
     <Message :closable="false" severity="warn" v-if="store.deck.length === 0">
       <template #messageicon>
         <WarnIcon class="p-icon" style="margin-right: var(--inline-spacing)" />
@@ -26,7 +53,6 @@
         </template>
       </Button>
       <div class="flex-center">
-        <p class="card-number">{{ safeCardIndex + 1 }} / {{ filteredDeck.length }}</p>
         <CardImage :card="scryfallCard" />
         <template v-if="settings.hideTags !== 'global'">
           <h2 v-if="settings.hideTags !== 'deckSpecific'">Global</h2>
@@ -81,10 +107,13 @@
 import Button from "primevue/button";
 import Message from "primevue/message";
 import Tag from "primevue/tag";
+import Toolbar from "primevue/toolbar";
 import CardImage from "./CardImage.vue";
 import WarnIcon from "./icons/WarnIcon.vue";
 import PreviousIcon from "./icons/PreviousIcon.vue";
 import NextIcon from "./icons/NextIcon.vue";
+import SettingsIcon from "./icons/SettingsIcon.vue";
+import TagsIcon from "./icons/TagsIcon.vue";
 import store, { settings } from "@/lib/store";
 import { computed } from "vue";
 import type { DeckCard, ScryfallCard } from "@/lib/types";
@@ -205,14 +234,21 @@ const previous = () => (safeCardIndex.value -= 1);
 .p-message {
   width: 100%;
 }
+
+.p-toolbar {
+  border-width: 0px;
+}
 .card-number {
   margin: 0;
-  margin-bottom: var(--inline-spacing);
+  font-weight: 600;
   color: var(--text-color-secondary);
+}
+.p-toolbar + .p-message {
+  margin-top: 0;
 }
 .card-image {
   max-width: 100%;
-  max-height: 500px;
+  max-height: 400px;
   margin-bottom: var(--content-padding);
 }
 

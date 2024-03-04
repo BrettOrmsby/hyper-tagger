@@ -6,17 +6,15 @@
     id="deck"
     :class="{ 'p-invalid': errorMessages.length > 0 }"
     placeholder="1 Live Fast (KLD) 87 *F* #!Global #Deck-Specific"
-    @input="() => (store.isDeckEdited = true)"
   />
   <div class="error-messages" v-if="errorMessages.length > 0">
     <p v-for="(errorMessage, index) of errorMessages" :key="index">
       {{ errorMessage }}
     </p>
   </div>
-  <Button label="Load Deck" icon-pos="left" :loading="isLoading" @click="checkConfirmLoadDeck">
+  <Button label="Load Deck" icon-pos="left" :loading="isLoading" @click="loadDeck">
     <template #icon="slotProps">
-      <PenIcon v-if="store.isDeckEdited" :class="slotProps.class" />
-      <CheckIcon v-else :class="slotProps.class" />
+      <PenIcon :class="slotProps.class" />
     </template>
     <template #loadingicon="slotProps">
       <LoadIcon :class="slotProps.class + ' p-icon-spin'" />
@@ -29,46 +27,21 @@
 // TODO: Star of Extinction (MB1) 1068 does not work
 import Textarea from "primevue/textarea";
 import Button from "primevue/button";
-import CheckIcon from "@/components/icons/CheckIcon.vue";
 import PenIcon from "@/components/icons/PenIcon.vue";
 import LoadIcon from "@/components/icons/LoadIcon.vue";
 import type { DeckCard, ScryfallCard } from "@/lib/types";
 import { convertStreamToString } from "@/lib/utils";
 import store from "@/lib/store";
 import { ref } from "vue";
-import { useConfirm } from "primevue/useconfirm";
 
 const emit = defineEmits<{
-  complete: [];
+  complete: [Event];
 }>();
 type ScryfallIdentifier = { set: string; collector_number: string };
 
-const confirm = useConfirm();
 const deck = ref("1 Live Fast (KLD) 87 *F* #!Global #Deck-Specific");
 const isLoading = ref(false);
 const errorMessages = ref<string[]>([]);
-
-/*
- * Present a warning if the tags of the deck were edited before entering a new deck
- */
-const checkConfirmLoadDeck = async () => {
-  if (store.isTagsEdited) {
-    confirm.require({
-      group: "template",
-      message: "This action will overwrite the current edited deck. Do you want to continue?",
-      header: "Warning",
-      icon: '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-alert-triangle"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>',
-      accept: async () => {
-        await loadDeck();
-      },
-      reject: () => {
-        store.isDeckEdited = false;
-      }
-    });
-  } else {
-    await loadDeck();
-  }
-};
 
 /*
  * Load the deck into the tagger
@@ -116,7 +89,7 @@ const loadDeck = async () => {
   if (notFound.length === 0) {
     store.deck = sortDeck(deckCards, cards);
     store.scryfallCards = cards;
-    store.isDeckEdited = false;
+    store.isTagsEdited = false;
     store.cardIndex = 0;
     const globalTags = new Set<string>();
     const deckSpecificTags = new Set<string>();
@@ -126,7 +99,7 @@ const loadDeck = async () => {
     });
     store.globalTags = [...globalTags];
     store.deckSpecificTags = [...deckSpecificTags];
-    emit("complete");
+    emit("complete", new Event("complete"));
   }
 };
 
@@ -241,8 +214,8 @@ const deckToJson = (deck: string): { cards: DeckCard[]; errors: number[] } => {
       name: matches[2].trim(),
       set: matches[3].trim(),
       collectorNumber: matches[4].trim(),
-      isFoil: matches[5]?.trim() ===  "*F*",
-      isEtched: matches[5]?.trim() ===  "*E*",
+      isFoil: matches[5]?.trim() === "*F*",
+      isEtched: matches[5]?.trim() === "*E*",
       globalTags: globalTags,
       deckSpecificTags: deckSpecificTags
     });
